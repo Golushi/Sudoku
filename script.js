@@ -1,4 +1,4 @@
-let mistakesTxt = document.getElementById('mistales');
+let mistakesTxt = document.getElementById('mistakes');
 let selectedDigit; let mistakes = 0;
 
 const encodeBoard = (board) => board.reduce((result, row, i) => result + `%5B${encodeURIComponent(row)}%5D${i === board.length -1 ? '' : '%2C'}`, '')
@@ -59,8 +59,23 @@ const startGame = async () => {
     }
     function writeDigit() {
         if (selectedDigit != undefined) {
-            
-            this.innerHTML = selectedDigit.innerHTML;
+            const classValue = this.classList.value;
+            if (selectedDigit.id == 0 && classValue.includes('wrong-digit')) {
+                this.classList.remove('wrong-digit');
+                this.innerHTML = "";
+                return;
+            } else {
+                if (this.innerHTML != "") return;
+                this.innerHTML = selectedDigit.innerHTML;
+            }
+
+            if (solution[this.id.charAt(0)][this.id.charAt(2)] == selectedDigit.id) {
+                this.classList.add('correct-digit');
+            } else {
+                this.classList.add('wrong-digit');
+                mistakes += 1;
+                mistakesTxt.innerHTML = `Erreur ! Nombre d'erreurs: ${mistakes}`;
+            }
         }
     }
 }
